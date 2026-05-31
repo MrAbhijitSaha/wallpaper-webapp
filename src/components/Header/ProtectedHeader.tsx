@@ -1,7 +1,7 @@
 import Link from "next/link";
 import ThemeToggleButton from "../Buttons/ThemeToggleButton";
 
-const Header = () => {
+const ProtectedHeader = () => {
   return (
     <header
       className="fixed top-0 right-0 left-0 z-50 border-b shadow"
@@ -11,12 +11,15 @@ const Header = () => {
           <h1
             className="text-2xl font-semibold"
             aria-label="App Name">
-            NSF App
+            AuraWall
           </h1>
         </Link>
 
         <nav className="flex items-center gap-4">
           <Link href={"/"}>Home</Link>
+          <Link href={"/collection"}>Collection</Link>
+          <Link href={"/creat"}>Creat</Link>
+          {/* <Link href={"/profile"}>Profile</Link> */}
 
           <ThemeToggleButton />
         </nav>
@@ -25,4 +28,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default ProtectedHeader;

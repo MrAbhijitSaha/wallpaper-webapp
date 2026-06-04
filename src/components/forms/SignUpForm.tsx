@@ -1,10 +1,13 @@
 "use client";
 
+import userSignup from "@/hooks/userSignup";
 import { SignUpFormSchemaType } from "@/lib/types";
 import { signUpFormSchema } from "@/lib/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
+import { redirect } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { Button } from "../shadcnui/button";
 import { Field, FieldError, FieldLabel } from "../shadcnui/field";
 import { Input } from "../shadcnui/input";
@@ -27,9 +30,18 @@ const SignUpForm = () => {
     mode: "all",
   });
 
-  const handleSignupFormSubmit = (value: SignUpFormSchemaType) => {
-    console.log(value);
-    reset();
+  const handleSignupFormSubmit = async (value: SignUpFormSchemaType) => {
+    const { isSuccess, message } = await userSignup(value);
+
+    console.log(isSuccess, message);
+
+    if (isSuccess) {
+      toast.success(message);
+      reset();
+      redirect("/auth/signin");
+    } else {
+      toast.error(message);
+    }
   };
 
   return (

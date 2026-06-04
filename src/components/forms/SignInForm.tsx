@@ -1,11 +1,15 @@
 "use client";
 
+import userSignin from "@/hooks/userSignin";
 import { SignInFormSchemaType } from "@/lib/types";
 import { signInFormSchema } from "@/lib/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
+import { redirect } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { Button } from "../shadcnui/button";
+import { Checkbox } from "../shadcnui/checkbox";
 import { Field, FieldError, FieldLabel } from "../shadcnui/field";
 import { Input } from "../shadcnui/input";
 
@@ -20,13 +24,20 @@ const SignInForm = () => {
     defaultValues: {
       email: "",
       password: "",
+      rememberMe: true,
     },
     mode: "all",
   });
 
-  const handleSignInFormSubmit = (value: SignInFormSchemaType) => {
-    console.log(value);
-    reset();
+  const handleSignInFormSubmit = async (value: SignInFormSchemaType) => {
+    const { isSuccess, message } = await userSignin(value);
+    if (isSuccess) {
+      toast.success(message);
+      reset();
+      redirect("/");
+    } else {
+      toast.error(message);
+    }
   };
 
   return (
@@ -49,7 +60,7 @@ const SignInForm = () => {
               aria-invalid={fieldState.invalid}
               placeholder="Please enter your email address"
               autoComplete="email"
-              className="py-6"
+              className="py-6 text-black"
             />
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
@@ -72,8 +83,24 @@ const SignInForm = () => {
               aria-invalid={fieldState.invalid}
               placeholder="Please enter password"
               autoComplete="off"
-              className="py-6"
+              className="py-6 text-black"
             />
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
+        )}
+      />
+
+      <Controller
+        name="rememberMe"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Field orientation="horizontal">
+            <Checkbox
+              id="rememberMe"
+              checked={field.value}
+              onCheckedChange={field.onChange}
+            />
+            <FieldLabel htmlFor="rememberMe">Remember Me</FieldLabel>
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}

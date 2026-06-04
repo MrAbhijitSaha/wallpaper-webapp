@@ -28,4 +28,5 @@ export const signInFormSchema = z.object({
   password: z
     .string()
     .min(8, { error: "Your password must be at last 8 charecters" }),
+  rememberMe: z.boolean(),
 });

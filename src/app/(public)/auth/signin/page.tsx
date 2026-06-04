@@ -24,14 +24,14 @@ const page = () => {
       `,
         }}
       />
-      <Card className="absolute w-xl bg-black/10 backdrop-blur-xl">
+      <Card className="absolute w-xl border border-gray-100/20 bg-transparent text-black shadow-2xl backdrop-blur-3xl">
         <CardHeader>
           <CardTitle className="text-3xl font-semibold">Sign In now</CardTitle>
         </CardHeader>
         <CardContent>
           <SignInForm />
         </CardContent>
-        <CardFooter>
+        <CardFooter className="text-white">
           Already have an account. &nbsp;
           <Link
             href={"/auth/signup"}

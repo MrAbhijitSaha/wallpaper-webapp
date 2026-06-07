@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ThemeToggleButton from "../Buttons/ThemeToggleButton";
 
 const PublicHeader = () => {
   return (
@@ -19,7 +20,7 @@ const PublicHeader = () => {
 
           <Link href={"/auth/signup"}>Sign up</Link>
 
-          {/* <ThemeToggleButton /> */}
+          <ThemeToggleButton />
         </nav>
       </div>
     </header>

@@ -1,10 +1,18 @@
+"use client";
+
+import { redirect } from "next/navigation";
 import { Button } from "../shadcnui/button";
 
 const EditWallpaperButton = () => {
+  const editButtonOnClickFunction = () => {
+    redirect("/edit");
+  };
+
   return (
     <Button
       className=""
-      variant={"outline"}>
+      variant={"outline"}
+      onClick={editButtonOnClickFunction}>
       Edit
     </Button>
   );

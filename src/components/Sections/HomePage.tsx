@@ -69,14 +69,14 @@ const HomePage = () => {
         </div>
 
         {/* Filters */}
-        <div className="scrollbar-hide mb-8 flex items-center gap-3 overflow-x-auto pb-4">
+        <div className="mb-8 flex items-center gap-3 overflow-x-auto pb-4">
           {CATEGORIES.map((cat, idx) => (
             <button
               key={cat}
               className={`rounded-full px-5 py-2 text-sm font-medium whitespace-nowrap transition-all duration-300 ${
                 idx === 0 ?
-                  "bg-zinc-50 text-zinc-950"
-                : "border border-transparent bg-zinc-900 text-zinc-400 hover:border-zinc-700 hover:bg-zinc-800 hover:text-zinc-50"
+                  "bg-foreground text-background"
+                : "bg-foreground text-background border border-transparent hover:border-zinc-700 hover:bg-zinc-800 hover:text-zinc-50"
               }`}>
               {cat}
             </button>
@@ -85,6 +85,7 @@ const HomePage = () => {
 
         {/* Wallpaper Grid */}
         <WallpaperGrid />
+        {/* <WallpaperCard /> */}
       </section>
       {/* </div> */}
     </>

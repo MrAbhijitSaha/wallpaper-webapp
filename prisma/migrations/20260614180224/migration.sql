@@ -50,6 +50,64 @@ CREATE TABLE "verification" (
     "updatedAt" DATETIME NOT NULL
 );
 
+-- CreateTable
+CREATE TABLE "Wallpaper" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "image" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "width" INTEGER,
+    "height" INTEGER,
+    "fileSize" INTEGER,
+    "format" TEXT,
+    "isPublic" BOOLEAN NOT NULL DEFAULT true,
+    "downloadCount" INTEGER NOT NULL DEFAULT 0,
+    "viewCount" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    "userId" TEXT NOT NULL,
+    "categoryId" TEXT,
+    CONSTRAINT "Wallpaper_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "Wallpaper_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Category" (
+    "id" TEXT NOT NULL PRIMARY KEY
+);
+
+-- CreateTable
+CREATE TABLE "Tag" (
+    "id" TEXT NOT NULL PRIMARY KEY
+);
+
+-- CreateTable
+CREATE TABLE "WallpaperTag" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "wallpaperId" TEXT,
+    CONSTRAINT "WallpaperTag_wallpaperId_fkey" FOREIGN KEY ("wallpaperId") REFERENCES "Wallpaper" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Like" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "wallpaperId" TEXT,
+    CONSTRAINT "Like_wallpaperId_fkey" FOREIGN KEY ("wallpaperId") REFERENCES "Wallpaper" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Download" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "wallpaperId" TEXT,
+    CONSTRAINT "Download_wallpaperId_fkey" FOREIGN KEY ("wallpaperId") REFERENCES "Wallpaper" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "CollectionItem" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "wallpaperId" TEXT,
+    CONSTRAINT "CollectionItem_wallpaperId_fkey" FOREIGN KEY ("wallpaperId") REFERENCES "Wallpaper" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 

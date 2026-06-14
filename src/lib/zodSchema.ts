@@ -30,3 +30,8 @@ export const signInFormSchema = z.object({
     .min(8, { error: "Your password must be at last 8 charecters" }),
   rememberMe: z.boolean(),
 });
+
+export const wallpaperUploadFormSchema = z.object({
+  title: z.string().min(3, { error: "Title must be at least 3 characters" }),
+  category: z.string().min(1, { error: "Please select a category" }),
+});

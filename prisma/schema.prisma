@@ -12,22 +12,23 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String      @id @default(uuid())
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean     @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
   sessions      Session[]
   accounts      Account[]
+  wallpapers    Wallpaper[]
 
   @@unique([email])
   @@map("user")
 }
 
 model Session {
-  id        String   @id
+  id        String   @id @default(uuid())
   expiresAt DateTime
   token     String
   createdAt DateTime @default(now())
@@ -43,7 +44,7 @@ model Session {
 }
 
 model Account {
-  id                    String    @id
+  id                    String    @id @default(uuid())
   accountId             String
   providerId            String
   userId                String
@@ -63,7 +64,7 @@ model Account {
 }
 
 model Verification {
-  id         String   @id
+  id         String   @id @default(uuid())
   identifier String
   value      String
   expiresAt  DateTime
@@ -72,4 +73,61 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Wallpaper {
+  id            String   @id @default(uuid())
+  image         String
+  title         String
+  width         Int?
+  height        Int?
+  fileSize      Int?
+  format        String?
+  isPublic      Boolean  @default(true)
+  downloadCount Int      @default(0)
+  viewCount     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId      String?
+  category        Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags            WallpaperTag[]
+  likes           Like[]
+  downloads       Download[]
+  collectionItems CollectionItem[]
+}
+
+model Category {
+  id         String      @id @default(uuid())
+  wallpapers Wallpaper[]
+}
+
+model Tag {
+  id String @id @default(uuid())
+}
+
+model WallpaperTag {
+  id          String     @id @default(uuid())
+  wallpaper   Wallpaper? @relation(fields: [wallpaperId], references: [id])
+  wallpaperId String?
+}
+
+model Like {
+  id          String     @id @default(uuid())
+  wallpaper   Wallpaper? @relation(fields: [wallpaperId], references: [id])
+  wallpaperId String?
+}
+
+model Download {
+  id          String     @id @default(uuid())
+  wallpaper   Wallpaper? @relation(fields: [wallpaperId], references: [id])
+  wallpaperId String?
+}
+
+model CollectionItem {
+  id          String     @id @default(uuid())
+  wallpaper   Wallpaper? @relation(fields: [wallpaperId], references: [id])
+  wallpaperId String?
 }

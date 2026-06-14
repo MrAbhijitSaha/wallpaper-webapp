@@ -109,7 +109,7 @@ export default function AurawallHome() {
             <span>Curated Collection V.04</span>
           </div>
           <h2 className="mb-6 text-5xl leading-[1.1] font-bold tracking-tighter md:text-7xl">
-            Elevate your <br className="hidden md:block" /> screen's aura.
+            Elevate your <br className="hidden md:block" /> screen&apos;s aura.
           </h2>
           <p className="max-w-xl text-lg font-light text-zinc-400">
             An editorial collection of high-resolution wallpapers tailored for

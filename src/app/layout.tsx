@@ -1,4 +1,4 @@
-import PublicHeader from "@/components/Header/PublicHeader";
+import ProtectedHeader from "@/components/Header/ProtectedHeader";
 import ThemeProvider from "@/components/Providers/ThemeProvider";
 import { geistSans } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
@@ -20,7 +20,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
           attribute={"class"}
           defaultTheme="dark"
           enableSystem={false}>
-          <PublicHeader />
+          <ProtectedHeader />
 
           <main className="mx-auto max-w-7xl">{children}</main>
         </ThemeProvider>

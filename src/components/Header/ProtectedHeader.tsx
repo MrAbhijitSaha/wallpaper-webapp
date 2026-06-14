@@ -1,10 +1,28 @@
+"use client";
+
 import Link from "next/link";
 import ThemeToggleButton from "../Buttons/ThemeToggleButton";
+import { Avatar, AvatarFallback, AvatarImage } from "../shadcnui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "../shadcnui/dropdown-menu";
+
+import { authClient } from "@/lib/auth-client";
+import { ChevronDownIcon, LogOutIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const ProtectedHeader = () => {
+  const { replace } = useRouter();
+  const { data, isPending } = authClient.useSession();
+
   return (
     <header
-      className="fixed top-0 right-0 left-0 z-50 border-b shadow"
+      className="fixed top-0 right-0 left-0 z-50 border-b shadow backdrop-blur-md"
       aria-label="app-header">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         <Link href={"/"}>
@@ -16,10 +34,68 @@ const ProtectedHeader = () => {
         </Link>
 
         <nav className="flex items-center gap-4">
-          <Link href={"/"}>Home</Link>
-          <Link href={"/collection"}>Collection</Link>
-          <Link href={"/creat"}>Creat</Link>
-          {/* <Link href={"/profile"}>Profile</Link> */}
+          <Link
+            href={"/"}
+            className="text-foreground/70 hover:text-foreground text-sm duration-300">
+            Home
+          </Link>
+          <Link
+            href={"/wallpapers"}
+            className="text-foreground/70 hover:text-foreground text-sm duration-300">
+            Wallpapers
+          </Link>
+          <Link
+            href={"/create"}
+            className="text-foreground/70 hover:text-foreground text-sm duration-300">
+            create
+          </Link>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger className="ring-border hover:ring-foreground/30 flex cursor-pointer items-center gap-1 rounded-full p-0.5 pr-2 ring-1 transition-all">
+              <Avatar>
+                <AvatarImage
+                  src={data?.user?.image || ""}
+                  alt={data?.user?.name || "User"}
+                />
+                <AvatarFallback>
+                  {data?.user?.name?.charAt(0)?.toUpperCase() || "U"}
+                </AvatarFallback>
+              </Avatar>
+              <ChevronDownIcon className="text-muted-foreground h-4 w-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {data ?
+                <>
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel>
+                      Hello {data.user.name}
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem onClick={() => replace("/profile")}>
+                      Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => replace("/liked")}>
+                      Liked
+                    </DropdownMenuItem>
+                    <DropdownMenuItem variant="destructive">
+                      <LogOutIcon />
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </>
+              : <>
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel>Login to your account</DropdownMenuLabel>
+                    <DropdownMenuItem onClick={() => replace("/auth/signin")}>
+                      Sign In
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => replace("/auth/signup")}>
+                      Sign Up
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </>
+              }
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <ThemeToggleButton />
         </nav>

@@ -8,7 +8,7 @@ const userSignup = async ({
   password,
 }: SignUpFormSchemaType) => {
   const { error } = await authClient.signUp.email({
-    name: `${firstName + lastName}`,
+    name: `${firstName} ${lastName}`,
     email,
     password,
   });

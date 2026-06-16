@@ -9,9 +9,11 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../shadcnui/dropdown-menu";
 
+import LogoutHandler from "@/hooks/userLogout";
 import { authClient } from "@/lib/auth-client";
 import { ChevronDownIcon, LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,7 +24,7 @@ const Header = () => {
 
   return (
     <header
-      className="fixed top-0 right-0 left-0 z-50 border-b shadow backdrop-blur-md"
+      className="fixed top-0 right-0 left-0 z-50 border-b shadow backdrop-blur-lg"
       aria-label="app-header">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         <Link href={"/"}>
@@ -63,20 +65,28 @@ const Header = () => {
               </Avatar>
               <ChevronDownIcon className="text-muted-foreground h-4 w-4" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent
+              align="center"
+              className={"w-50"}>
               {data ?
                 <>
                   <DropdownMenuGroup>
                     <DropdownMenuLabel>
-                      Hello {data.user.name}
+                      Hello {data.user.name.split(" ")[0].toUpperCase()}
                     </DropdownMenuLabel>
+                    <DropdownMenuLabel>{data.user.email}</DropdownMenuLabel>
+
+                    <DropdownMenuSeparator />
+
                     <DropdownMenuItem onClick={() => replace("/profile")}>
                       Profile
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => replace("/liked")}>
                       Liked
                     </DropdownMenuItem>
-                    <DropdownMenuItem variant="destructive">
+                    <DropdownMenuItem
+                      variant="destructive"
+                      onClick={() => (LogoutHandler(), replace("/"))}>
                       <LogOutIcon />
                       Log out
                     </DropdownMenuItem>

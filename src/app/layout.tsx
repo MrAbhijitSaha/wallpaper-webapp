@@ -1,28 +1,28 @@
-import ProtectedHeader from "@/components/Header/ProtectedHeader";
+import Header from "@/components/Header/Header";
 import ThemeProvider from "@/components/Providers/ThemeProvider";
+import { Toaster } from "@/components/shadcnui/sonner";
 import { geistSans } from "@/lib/fonts";
+import { LayoutChildrenProps } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { ReactNode } from "react";
 import "./globals.css";
 
-type RootLayoutProps = Readonly<{
-  children: ReactNode;
-}>;
-
-const RootLayout = ({ children }: RootLayoutProps) => {
+const RootLayout = ({ children }: LayoutChildrenProps) => {
   return (
     <html
       lang="en"
       className={cn("font-sans", geistSans.variable)}
       suppressHydrationWarning>
-      <body>
+      <body className="">
         <ThemeProvider
           attribute={"class"}
-          defaultTheme="dark"
-          enableSystem={false}>
-          <ProtectedHeader />
+          defaultTheme="system"
+          disableTransitionOnChange
+          enableSystem>
+          <div className="fixed inset-0 -z-10 [background:radial-gradient(125%_125%_at_50%_90%,#fff_40%,#6366f1_100%)] dark:[background:radial-gradient(125%_125%_at_50%_90%,#000000_40%,#0d1a36_100%)]" />
+          <Header />
 
-          <main className="mx-auto max-w-7xl">{children}</main>
+          <main>{children}</main>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

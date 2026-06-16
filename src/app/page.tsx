@@ -14,7 +14,7 @@ const page = async () => {
   const session = await auth.api.getSession({ headers: await headers() });
 
   return (
-    <section className="grid h-[85dvh] place-items-center">
+    <section className="grid h-dvh place-items-center">
       <div className="mx-auto max-w-2xl text-center">
         <h1 className="text-5xl font-medium tracking-tight sm:text-6xl">
           Beautiful wallpapers,

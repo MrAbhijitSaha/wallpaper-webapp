@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import z from "zod";
 import {
   signInFormSchema,
@@ -5,6 +6,9 @@ import {
   wallpaperUploadFormSchema,
 } from "./zodSchema";
 
+export type LayoutChildrenProps = Readonly<{
+  children: ReactNode;
+}>;
 export type SignUpFormSchemaType = z.infer<typeof signUpFormSchema>;
 export type SignInFormSchemaType = z.infer<typeof signInFormSchema>;
 export type WallpaperUploadFormSchemaType = z.infer<

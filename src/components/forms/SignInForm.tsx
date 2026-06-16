@@ -7,7 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+
+import { toast } from "sonner";
 import { Button } from "../shadcnui/button";
 import { Checkbox } from "../shadcnui/checkbox";
 import { Field, FieldError, FieldLabel } from "../shadcnui/field";
@@ -60,7 +61,7 @@ const SignInForm = () => {
               aria-invalid={fieldState.invalid}
               placeholder="Please enter your email address"
               autoComplete="email"
-              className="py-6 text-black"
+              className="text-foreground py-6"
             />
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
@@ -83,7 +84,7 @@ const SignInForm = () => {
               aria-invalid={fieldState.invalid}
               placeholder="Please enter password"
               autoComplete="off"
-              className="py-6 text-black"
+              className="text-foreground py-6"
             />
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>

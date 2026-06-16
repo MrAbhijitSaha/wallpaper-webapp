@@ -16,7 +16,7 @@ import { authClient } from "@/lib/auth-client";
 import { ChevronDownIcon, LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const ProtectedHeader = () => {
+const Header = () => {
   const { replace } = useRouter();
   const { data, isPending } = authClient.useSession();
 
@@ -52,7 +52,7 @@ const ProtectedHeader = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger className="ring-border hover:ring-foreground/30 flex cursor-pointer items-center gap-1 rounded-full p-0.5 pr-2 ring-1 transition-all">
-              <Avatar>
+              <Avatar size="sm">
                 <AvatarImage
                   src={data?.user?.image || ""}
                   alt={data?.user?.name || "User"}
@@ -104,4 +104,4 @@ const ProtectedHeader = () => {
   );
 };
 
-export default ProtectedHeader;
+export default Header;

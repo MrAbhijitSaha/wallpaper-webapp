@@ -10,38 +10,26 @@ import Link from "next/link";
 
 const page = () => {
   return (
-    <section className="grid h-dvh w-full grid-cols-2 place-items-center">
-      {/* Aurora Dream Vivid Bloom */}
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          background: `
-        radial-gradient(ellipse 80% 60% at 70% 20%, rgba(175, 109, 255, 0.85), transparent 68%),
-        radial-gradient(ellipse 70% 60% at 20% 80%, rgba(255, 100, 180, 0.75), transparent 68%),
-        radial-gradient(ellipse 60% 50% at 60% 65%, rgba(255, 235, 170, 0.98), transparent 68%),
-        radial-gradient(ellipse 65% 40% at 50% 60%, rgba(120, 190, 255, 0.3), transparent 68%),
-        linear-gradient(180deg, #f7eaff 0%, #fde2ea 100%)
-      `,
-        }}
-      />
-
-      <Card className="absolute w-xl border border-gray-100/20 bg-transparent text-black shadow-2xl backdrop-blur-3xl">
+    <div className="grid h-dvh w-full grid-cols-2 place-items-center">
+      <Card className="border-foreground/20 text-foreground/60 absolute w-xl border bg-transparent shadow-2xl backdrop-blur-3xl">
         <CardHeader>
-          <CardTitle className="text-3xl font-semibold">Sign Up now</CardTitle>
+          <CardTitle className="text-foreground text-3xl font-semibold">
+            Sign Up now
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <SignUpForm />
         </CardContent>
-        <CardFooter className="text-white">
+        <CardFooter className="text-foreground/60 group">
           Already have an account. &nbsp;
           <Link
             href={"/auth/signin"}
-            className="underline underline-offset-2">
+            className="group-hover:text-foreground underline underline-offset-2 duration-300">
             Sign In
           </Link>
         </CardFooter>
       </Card>
-    </section>
+    </div>
   );
 };
 

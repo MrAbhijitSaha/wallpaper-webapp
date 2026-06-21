@@ -2,6 +2,7 @@ import Header from "@/components/Header/Header";
 import ThemeProvider from "@/components/Providers/ThemeProvider";
 import { Toaster } from "@/components/shadcnui/sonner";
 import { geistSans } from "@/lib/fonts";
+
 import { LayoutChildrenProps } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import "./globals.css";
@@ -22,6 +23,7 @@ const RootLayout = ({ children }: LayoutChildrenProps) => {
           <Header />
 
           <main>{children}</main>
+
           <Toaster />
         </ThemeProvider>
       </body>

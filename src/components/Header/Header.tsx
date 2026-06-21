@@ -47,7 +47,7 @@ const Header = () => {
             Wallpapers
           </Link>
           <Link
-            href={"/create"}
+            href={data ? "/create" : "/auth/signin"}
             className="text-foreground/70 hover:text-foreground text-sm duration-300">
             create
           </Link>

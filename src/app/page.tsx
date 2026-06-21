@@ -32,7 +32,7 @@ const page = async () => {
               <ArrowUpRightIcon className="ml-1.5 size-4" />
             </Button>
           </Link>
-          <Link href={session ? "/create" : "/auth/signin?returnTo=/upload"}>
+          <Link href={session ? "/create" : "/auth/signin"}>
             <Button
               variant="ghost"
               size="lg">

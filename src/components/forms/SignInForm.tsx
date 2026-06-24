@@ -5,9 +5,11 @@ import { SignInFormSchemaType } from "@/lib/types";
 import { signInFormSchema } from "@/lib/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
-import { redirect } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 
+import { signinDialogAtom } from "@/lib/globalState";
+import { useSetAtom } from "jotai";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "../shadcnui/button";
 import { Checkbox } from "../shadcnui/checkbox";
@@ -15,6 +17,10 @@ import { Field, FieldError, FieldLabel } from "../shadcnui/field";
 import { Input } from "../shadcnui/input";
 
 const SignInForm = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const setSigninDialog = useSetAtom(signinDialogAtom);
+
   const {
     handleSubmit,
     control,
@@ -33,9 +39,12 @@ const SignInForm = () => {
   const handleSignInFormSubmit = async (value: SignInFormSchemaType) => {
     const { isSuccess, message } = await userSignin(value);
     if (isSuccess) {
+      setSigninDialog(false);
       toast.success(message);
       reset();
-      redirect("/");
+      if (pathname === "/auth/signin") {
+        router.replace("/");
+      }
     } else {
       toast.error(message);
     }

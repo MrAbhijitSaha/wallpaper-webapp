@@ -15,8 +15,10 @@ import {
 
 import LogoutHandler from "@/hooks/userLogout";
 import { authClient } from "@/lib/auth-client";
+
 import { ChevronDownIcon, LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import ProtectedActionButton from "../Buttons/ProtectedActionButton";
 
 const Header = () => {
   const { replace } = useRouter();
@@ -46,11 +48,17 @@ const Header = () => {
             className="text-foreground/70 hover:text-foreground text-sm duration-300">
             Wallpapers
           </Link>
-          <Link
-            href={data ? "/create" : "/auth/signin"}
+          {/* <Link
+            href={data ? "/create" : setIsOpen(true)}
             className="text-foreground/70 hover:text-foreground text-sm duration-300">
             create
-          </Link>
+          </Link> */}
+
+          <ProtectedActionButton
+            onClick={() => replace("/create")}
+            className="text-foreground/70 hover:text-foreground text-sm duration-300">
+            Create
+          </ProtectedActionButton>
 
           <DropdownMenu>
             <DropdownMenuTrigger className="ring-border hover:ring-foreground/30 flex cursor-pointer items-center gap-1 rounded-full p-0.5 pr-2 ring-1 transition-all">

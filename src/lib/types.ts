@@ -14,3 +14,14 @@ export type SignInFormSchemaType = z.infer<typeof signInFormSchema>;
 export type WallpaperUploadFormSchemaType = z.infer<
   typeof wallpaperUploadFormSchema
 >;
+
+export type ProtectedActionButtonProps = {
+  children: ReactNode;
+  className?: string;
+  variant?: string;
+  onClick: () => void;
+};
+
+export type SignInFormProps = {
+  onSuccess?: () => void;
+};

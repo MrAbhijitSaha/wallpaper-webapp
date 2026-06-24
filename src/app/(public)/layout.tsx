@@ -2,14 +2,15 @@ import { ReactNode } from "react";
 
 type LayoutChildrenProps = Readonly<{
   children: ReactNode;
-  authModal: ReactNode;
+
+  wallpaperModal: ReactNode;
 }>;
 
-const layout = ({ authModal, children }: LayoutChildrenProps) => {
+const layout = ({ children, wallpaperModal }: LayoutChildrenProps) => {
   return (
     <>
-      {authModal}
       {children}
+      {wallpaperModal}
     </>
   );
 };

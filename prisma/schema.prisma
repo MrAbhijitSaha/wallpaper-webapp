@@ -22,6 +22,8 @@ model User {
   sessions      Session[]
   accounts      Account[]
   wallpapers    Wallpaper[]
+  likes         Like[]
+  downloads     Download[]
 
   @@unique([email])
   @@map("user")
@@ -83,51 +85,51 @@ model Wallpaper {
   height        Int?
   fileSize      Int?
   format        String?
-  isPublic      Boolean  @default(true)
   downloadCount Int      @default(0)
   viewCount     Int      @default(0)
+  likeCount     Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  userId          String
-  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  categoryId      String?
-  category        Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  tags            WallpaperTag[]
-  likes           Like[]
-  downloads       Download[]
-  collectionItems CollectionItem[]
+  userId     String
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId String?
+  category   Category?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  likes      Like[]
+  downloads  Download[]
+
+  @@map("wallpaper")
 }
 
 model Category {
-  id         String      @id @default(uuid())
-  wallpapers Wallpaper[]
-}
+  id           String      @id @default(uuid())
+  categoryName String
+  wallpapers   Wallpaper[]
 
-model Tag {
-  id String @id @default(uuid())
-}
-
-model WallpaperTag {
-  id          String     @id @default(uuid())
-  wallpaper   Wallpaper? @relation(fields: [wallpaperId], references: [id])
-  wallpaperId String?
+  @@map("category")
 }
 
 model Like {
-  id          String     @id @default(uuid())
-  wallpaper   Wallpaper? @relation(fields: [wallpaperId], references: [id])
-  wallpaperId String?
+  id      String   @id @default(uuid())
+  likedAt DateTime @default(now())
+
+  wallpaperId String
+  wallpaper   Wallpaper @relation(fields: [wallpaperId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, wallpaperId])
+  @@map("like")
 }
 
 model Download {
-  id          String     @id @default(uuid())
-  wallpaper   Wallpaper? @relation(fields: [wallpaperId], references: [id])
-  wallpaperId String?
-}
+  id          String @id @default(uuid())
+  wallpaperId String
+  userId      String
 
-model CollectionItem {
-  id          String     @id @default(uuid())
-  wallpaper   Wallpaper? @relation(fields: [wallpaperId], references: [id])
-  wallpaperId String?
+  wallpaper Wallpaper @relation(fields: [wallpaperId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("download")
 }

@@ -55,7 +55,7 @@ const Header = () => {
           </Link> */}
 
           <ProtectedActionButton
-            onClick={() => replace("/create")}
+            route="create"
             className="text-foreground/70 hover:text-foreground text-sm duration-300">
             Create
           </ProtectedActionButton>

@@ -1,17 +1,25 @@
 import WallpaperCard from "@/components/Cards/WallpaperCard";
 import prisma from "@/lib/database/dbClient";
-import getCategory from "@/server/getCategory";
 import Link from "next/link";
 
-const page = async () => {
-  const wallpaper = await prisma.wallpaper.findMany({
+const page = async ({
+  params,
+}: {
+  params: Promise<{ categoryWallpaper: string }>;
+}) => {
+  const { categoryWallpaper } = await params;
+  const category = await prisma.category.findMany();
+
+  const wallpapers = await prisma.wallpaper.findMany({
+    where: {
+      category: {
+        categoryName: categoryWallpaper,
+      },
+    },
     include: {
       category: true,
     },
   });
-
-  // const category = await prisma.category.findMany();
-  const category = await getCategory();
 
   return (
     <>
@@ -31,14 +39,14 @@ const page = async () => {
         : null}
       </div>
 
-      <section className="columns-1 gap-6 space-y-6 md:columns-2 lg:columns-3">
-        {wallpaper.map((w) => (
+      <div className="columns-1 gap-6 space-y-6 md:columns-2 lg:columns-3">
+        {wallpapers.map((wall) => (
           <WallpaperCard
-            key={w.id}
-            wallpaperinfo={w}
+            key={wall.id}
+            wallpaperinfo={wall}
           />
         ))}
-      </section>
+      </div>
     </>
   );
 };

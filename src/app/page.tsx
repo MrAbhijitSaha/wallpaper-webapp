@@ -26,6 +26,8 @@ const page = async () => {
           categories, save your favourites, and share your own.
         </p>
 
+        <Link href={"/admin/createCategory"}>Create category</Link>
+
         <div className="mt-8 flex items-center justify-center gap-3">
           <Link href="/wallpapers">
             <Button size="lg">

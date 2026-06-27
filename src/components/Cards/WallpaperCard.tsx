@@ -1,6 +1,7 @@
-import { DownloadIcon, HeartIcon } from "lucide-react";
 import Image from "next/image";
 import { Prisma } from "../../../generated/prisma/browser";
+import DownloadButton from "../Buttons/DownloadButton";
+import LikeButton from "../Buttons/LikeButton";
 import { Card } from "../shadcnui/card";
 
 type WallpaperCardProps = {
@@ -35,13 +36,13 @@ const WallpaperCard = ({ wallpaperinfo }: WallpaperCardProps) => {
             </div>
 
             <div className="flex gap-2">
-              <button className="rounded-full bg-white/10 p-2 backdrop-blur">
-                <HeartIcon className="h-4 w-4 text-white" />
-              </button>
+              <LikeButton
+                initialCount={wallpaperinfo.likeCount}
+                initialLiked={false}
+                wallpaperId={wallpaperinfo.id}
+              />
 
-              <button className="rounded-full bg-white p-2">
-                <DownloadIcon className="h-4 w-4 text-black" />
-              </button>
+              <DownloadButton />
             </div>
           </div>
         </div>

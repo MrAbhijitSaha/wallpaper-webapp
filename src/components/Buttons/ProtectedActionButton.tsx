@@ -1,37 +1,38 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-
 import { signinDialogAtom } from "@/lib/globalState";
 import { ProtectedActionButtonProps } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useSetAtom } from "jotai";
 import { Route } from "next";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "../shadcnui/button";
 
-const ProtectedActionButton = ({
+export default function ProtectedActionButton({
   children,
   route,
   className,
-}: ProtectedActionButtonProps) => {
+}: ProtectedActionButtonProps) {
   const { data } = authClient.useSession();
   const openSignin = useSetAtom(signinDialogAtom);
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (!data) {
+      openSignin(true);
+      return;
+    }
+
+    router.push(`/${route}` as Route);
+  };
 
   return (
     <Button
-      render={<Link href={`/${route}` as Route}> {children}</Link>}
-      nativeButton={false}
-      variant={"link"}
+      variant="link"
       className={cn("no-underline hover:no-underline", className)}
-      onClick={() => {
-        if (!data) {
-          openSignin(true);
-          return;
-        }
-      }}
-    />
+      onClick={handleClick}>
+      {children}
+    </Button>
   );
-};
-
-export default ProtectedActionButton;
+}

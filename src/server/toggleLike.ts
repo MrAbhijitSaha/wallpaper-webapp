@@ -13,22 +13,10 @@ const toggleLike = async (wallpaperId: string) => {
     if (!session?.user?.id) {
       return {
         success: false,
+        userAuthentication: false,
+        liked: false,
+        likesCount: 0,
         message: "Please login first.",
-      };
-    }
-
-    // Validate wallpaper exists and is public
-    const wallpaper = await prisma.wallpaper.findFirst({
-      where: {
-        id: wallpaperId,
-        isPublic: true,
-      },
-    });
-
-    if (!wallpaper) {
-      return {
-        success: false,
-        message: "Wallpaper not found.",
       };
     }
 
@@ -73,6 +61,7 @@ const toggleLike = async (wallpaperId: string) => {
 
     return {
       success: true,
+      userAuthentication: true,
       liked,
       likesCount,
       message: liked ? "Wallpaper liked." : "Like removed.",

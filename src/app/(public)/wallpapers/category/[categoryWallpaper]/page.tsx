@@ -1,5 +1,7 @@
 import WallpaperCard from "@/components/Cards/WallpaperCard";
+import { auth } from "@/lib/auth";
 import prisma from "@/lib/database/dbClient";
+import { headers } from "next/headers";
 import Link from "next/link";
 
 const page = async ({
@@ -7,6 +9,10 @@ const page = async ({
 }: {
   params: Promise<{ categoryWallpaper: string }>;
 }) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   const { categoryWallpaper } = await params;
   const category = await prisma.category.findMany();
 
@@ -18,6 +24,19 @@ const page = async ({
     },
     include: {
       category: true,
+      _count: {
+        select: {
+          likes: true,
+        },
+      },
+      likes: {
+        where: {
+          userId: session?.user?.id ?? "",
+        },
+        select: {
+          id: true,
+        },
+      },
     },
   });
 

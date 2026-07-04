@@ -1,5 +1,7 @@
+import SingleWallpaerCard from "@/components/Cards/SingleWallpaerCard";
+
 const page = () => {
-  return <div>Enter</div>;
+  return <SingleWallpaerCard />;
 };
 
 export default page;

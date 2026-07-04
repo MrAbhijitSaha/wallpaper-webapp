@@ -1,90 +1,60 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
+import { signinDialogAtom } from "@/lib/globalState";
 import toggleLike from "@/server/toggleLike";
+import { useSetAtom } from "jotai";
 import { HeartIcon } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { ReactNode, useState } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
 import { Button } from "../shadcnui/button";
 
 type LikeButtonProps = {
-  tooltipContent?: ReactNode;
   wallpaperId: string;
-  initialCount: number;
   initialLiked: boolean;
+  initialLikesCount: number;
 };
 
-const LikeButton = ({
-  tooltipContent,
+export const LikeButton = ({
   wallpaperId,
-  initialCount,
   initialLiked,
+  initialLikesCount,
 }: LikeButtonProps) => {
+  const openSignin = useSetAtom(signinDialogAtom);
+
   const [liked, setLiked] = useState(initialLiked);
-  const [count, setCount] = useState(initialCount);
-  const [loading, setLoading] = useState(false);
-  const [showError, setError] = useState<string>();
-  const { data } = authClient.useSession();
-  const pathname = usePathname();
+  const [likesCount, setLikesCount] = useState(initialLikesCount);
+  const [isPending, setIsPending] = useState(false);
 
-  const handleLike = async () => {
-    if (!data) {
-      setError("Please login first");
-      return;
-    }
-
-    if (loading) return;
-
-    setLoading(true);
-
-    const previousLiked = liked;
-    const previousCount = count;
-
-    // Optimistic update
-    setLiked(!liked);
-    setCount(liked ? count - 1 : count + 1);
+  const handleToggle = async () => {
+    setIsPending(true);
 
     try {
       const result = await toggleLike(wallpaperId);
 
-      if (!result.success) {
-        // Rollback
-        setLiked(previousLiked);
-        setCount(previousCount);
-        toast.error(result.message);
-      } else {
-        toast.success(result.message);
-        setLiked(result.liked ?? previousLiked);
-        setCount(result.likesCount ?? previousCount);
+      if (!result.userAuthentication) {
+        openSignin(true);
+        return;
       }
-    } catch {
-      setLiked(previousLiked);
-      setCount(previousCount);
-      toast.error("Something went wrong");
-    } finally {
-      setLoading(false);
-    }
 
-    console.log({
-      initialLiked,
-      liked,
-    });
+      if (result.success) {
+        setLiked(result.liked);
+        setLikesCount(result.likesCount);
+      }
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (
     <Button
-      className="group/like rounded-full p-2"
-      variant="default"
-      aria-label="Like Wallpaper"
-      onClick={handleLike}
-      disabled={loading}>
+      variant={liked ? "default" : "outline"}
+      size="sm"
+      onClick={handleToggle}
+      disabled={isPending}
+      className="gap-2">
       <HeartIcon
-        fill="currentColor"
-        className="text-background h-5 w-5 transition-colors duration-300 group-hover/like:text-red-600"
+        className={`h-4 w-4 ${liked ? "fill-current text-red-500" : ""}`}
       />
+      <span>{likesCount}</span>
     </Button>
   );
 };
-
-export default LikeButton;

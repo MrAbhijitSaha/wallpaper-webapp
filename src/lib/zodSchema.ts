@@ -9,7 +9,7 @@ export const signUpFormSchema = z
     lastName: z
       .string()
       .min(3, { error: "Last name can't be less than 3 charecters" })
-      .max(6, { error: "Last name can't be more than 6 charecters" }),
+      .max(15, { error: "Last name can't be more than 15 charecters" }),
     email: z.email({ error: "Invalid email adress" }),
     password: z
       .string()

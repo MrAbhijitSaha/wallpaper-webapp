@@ -4,7 +4,7 @@ import { signinDialogAtom } from "@/lib/globalState";
 import toggleLike from "@/server/toggleLike";
 import { useSetAtom } from "jotai";
 import { HeartIcon } from "lucide-react";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import { Button } from "../shadcnui/button";
 
 type LikeButtonProps = {
@@ -24,7 +24,10 @@ export const LikeButton = ({
   const [likesCount, setLikesCount] = useState(initialLikesCount);
   const [isPending, setIsPending] = useState(false);
 
-  const handleToggle = async () => {
+  const handleToggle = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     setIsPending(true);
 
     try {
@@ -36,8 +39,8 @@ export const LikeButton = ({
       }
 
       if (result.success) {
-        setLiked(result.liked);
-        setLikesCount(result.likesCount);
+        setLiked(result.liked ?? false);
+        setLikesCount(result.likesCount ?? 0);
       }
     } finally {
       setIsPending(false);

@@ -5,6 +5,7 @@ import { CategoryFormSchemaType } from "@/lib/types";
 import createCategoryAction from "@/server/createCategoryAction";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon, UploadIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { createCategoryFormSchema } from "../../lib/zodSchema";
 import { Button } from "../shadcnui/button";
@@ -12,9 +13,12 @@ import { Field, FieldError, FieldLabel } from "../shadcnui/field";
 import { Input } from "../shadcnui/input";
 
 const CreateCategoryForm = () => {
+  const router = useRouter();
+
   const {
     control,
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = useForm({
     resolver: zodResolver(createCategoryFormSchema),
@@ -26,6 +30,8 @@ const CreateCategoryForm = () => {
 
   const handleCreateCategoryFormSubmit = (value: CategoryFormSchemaType) => {
     createCategoryAction(value);
+    reset();
+    router.push("/wallpapers");
   };
 
   return (

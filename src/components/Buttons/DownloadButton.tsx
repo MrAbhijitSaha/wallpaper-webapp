@@ -2,8 +2,7 @@
 
 import trackWallpaperDownload from "@/server/trackWallpaperDownload";
 import { DownloadIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../shadcnui/button";
 
@@ -14,9 +13,11 @@ type DownloadButtonProps = {
 
 const DownloadButton = ({ wallpaperId, imagePath }: DownloadButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
-  const handleDownload = async () => {
+  const handleDownload = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     setIsLoading(true);
 
     try {
@@ -27,8 +28,16 @@ const DownloadButton = ({ wallpaperId, imagePath }: DownloadButtonProps) => {
         return;
       }
 
-      router.refresh();
-      window.open(`/${imagePath}`, "_blank", "noopener,noreferrer");
+      // Create a temporary download link
+      const link = document.createElement("a");
+      link.href = `/${imagePath}`;
+      link.download = imagePath.split("/").pop() || "wallpaper";
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success("Download started!");
     } catch (error) {
       console.error(error);
       toast.error("Download failed.");

@@ -6,6 +6,7 @@ import { uploadWallpaperAction } from "@/server/uploadWallpaperAction";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, Loader2Icon, UploadIcon, XIcon } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useFilePicker } from "use-file-picker";
@@ -25,12 +26,15 @@ type UploadWallpaperFormProps = {
 };
 
 const UploadWallpaperForm = ({ categoryData }: UploadWallpaperFormProps) => {
+  const router = useRouter();
+
   const [isFile, setIsFile] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
   const {
     control,
     handleSubmit,
+    reset,
     formState: { isSubmitting, isSubmitSuccessful },
   } = useForm({
     resolver: zodResolver(wallpaperUploadFormSchema),
@@ -54,6 +58,9 @@ const UploadWallpaperForm = ({ categoryData }: UploadWallpaperFormProps) => {
     value: WallpaperUploadFormSchemaType,
   ) => {
     await uploadWallpaperAction(value, plainFiles[0]);
+
+    reset();
+    router.push("/wallpapers");
   };
 
   return (

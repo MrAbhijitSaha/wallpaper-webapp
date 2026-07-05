@@ -7,7 +7,7 @@ const createCategoryAction = async ({ category }: CategoryFormSchemaType) => {
   try {
     await prisma.category.create({
       data: {
-        categoryName: category,
+        categoryName: category.toLowerCase(),
       },
     });
   } catch (error) {

@@ -43,7 +43,7 @@ const SignInForm = () => {
       toast.success(message);
       reset();
       if (pathname === "/auth/signin") {
-        router.replace("/");
+        router.replace("/wallpapers");
       }
     } else {
       toast.error(message);

@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useFilePicker } from "use-file-picker";
 import { Category } from "../../../generated/prisma/browser";
 import { Button } from "../shadcnui/button";
@@ -57,6 +58,10 @@ const UploadWallpaperForm = ({ categoryData }: UploadWallpaperFormProps) => {
   const handleUploadWallpaperForm = async (
     value: WallpaperUploadFormSchemaType,
   ) => {
+    if (!isFile) {
+      return toast.error("Please select your image");
+    }
+
     await uploadWallpaperAction(value, plainFiles[0]);
 
     reset();
@@ -225,10 +230,10 @@ const UploadWallpaperForm = ({ categoryData }: UploadWallpaperFormProps) => {
       {/* Submit */}
       <Button
         type="submit"
-        disabled={isSubmitting || plainFiles.length === 0}
+        disabled={isSubmitting || !isFile}
         variant="outline"
         className={`w-full border transition-all duration-200 ${
-          isSubmitSuccessful ?
+          isSubmitSuccessful && isFile ?
             "border-green-500/30 bg-green-500/5 text-green-600 hover:bg-green-500/10"
           : "border-primary/30 text-primary hover:bg-primary/5"
         } `}>
@@ -237,7 +242,7 @@ const UploadWallpaperForm = ({ categoryData }: UploadWallpaperFormProps) => {
             <Loader2Icon className="size-4 animate-spin" />
             Uploading...
           </>
-        : isSubmitSuccessful ?
+        : isSubmitSuccessful && isFile ?
           <>
             <CheckIcon className="size-4" />
             Uploaded

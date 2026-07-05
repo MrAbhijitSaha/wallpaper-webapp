@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Prisma } from "../../../generated/prisma/browser";
 import DownloadButton from "../Buttons/DownloadButton";
 
-import getAspectRatioClass from "@/hooks/getAspectRatioClass";
 import Link from "next/link";
 import { LikeButton } from "../Buttons/LikeButton";
 import { Card } from "../shadcnui/card";
@@ -26,28 +25,24 @@ type WallpaperCardProps = {
 };
 
 const WallpaperCard = ({ wallpaperinfo }: WallpaperCardProps) => {
-  const aspectRatioClass = getAspectRatioClass(
-    wallpaperinfo.height,
-    wallpaperinfo.width,
-  );
-
   return (
-    <Card className="group overflow-hidden border-0 bg-zinc-900 p-0">
+    <Card className="group overflow-hidden rounded-xl border-0 bg-zinc-900 p-0 shadow-md transition-shadow duration-300 hover:shadow-xl hover:shadow-black/30">
       <Link href={`/wallpapers/${wallpaperinfo.id}`}>
-        <div className={`relative ${aspectRatioClass}`}>
+        <div className="relative w-full">
           <Image
             src={`/${wallpaperinfo.image}`}
             alt={wallpaperinfo.title}
-            height={wallpaperinfo.height || 1080}
             width={wallpaperinfo.width || 720}
+            height={wallpaperinfo.height || 1080}
             loading="lazy"
-            className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="block h-auto w-full transition-transform duration-500 ease-out group-hover:scale-105"
           />
 
-          <div className="absolute inset-0 flex items-end bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-100 transition-opacity duration-300">
-            <div className="flex w-full items-end justify-between p-4">
-              <div>
-                <h3 className="font-medium text-white">
+          <div className="absolute inset-0 flex items-end bg-linear-to-t from-black/85 via-black/10 to-transparent">
+            <div className="flex w-full items-end justify-between gap-3 p-4">
+              <div className="min-w-0">
+                <h3 className="truncate font-medium text-white">
                   {wallpaperinfo.title}
                 </h3>
 
@@ -56,7 +51,7 @@ const WallpaperCard = ({ wallpaperinfo }: WallpaperCardProps) => {
                 </p>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex shrink-0 gap-2 opacity-90 transition-opacity duration-200 group-hover:opacity-100">
                 <LikeButton
                   initialLikesCount={wallpaperinfo._count.likes}
                   initialLiked={wallpaperinfo.likes.length > 0}

@@ -1,8 +1,10 @@
 "use server";
 
+import { auth } from "@/lib/auth";
 import prisma from "@/lib/database/dbClient";
 import { WallpaperUploadFormSchemaType } from "@/lib/types";
 import { nanoid } from "nanoid";
+import { headers } from "next/headers";
 import sharp from "sharp";
 
 export async function uploadWallpaperAction(
@@ -10,6 +12,14 @@ export async function uploadWallpaperAction(
   imageUrl: File,
 ) {
   try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user?.id) {
+      return { error: "You must be logged in to upload a wallpaper" };
+    }
+
     const imgBuffer = await imageUrl.arrayBuffer();
     const imgId = `${nanoid(8)}.jpeg`;
     await sharp(imgBuffer)
@@ -18,11 +28,6 @@ export async function uploadWallpaperAction(
         quality: 90,
       })
       .toFile(`./public/${imgId}`);
-
-    const user = await prisma.user.findFirst();
-    if (!user) {
-      throw new Error("No user found for wallpaper upload");
-    }
 
     const wallpaper = await prisma.wallpaper.create({
       data: {
@@ -35,7 +40,7 @@ export async function uploadWallpaperAction(
         image: imgId,
         user: {
           connect: {
-            id: user.id,
+            id: session.user.id,
           },
         },
       },

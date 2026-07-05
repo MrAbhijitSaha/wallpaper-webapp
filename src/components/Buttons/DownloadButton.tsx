@@ -48,12 +48,12 @@ const DownloadButton = ({ wallpaperId, imagePath }: DownloadButtonProps) => {
 
   return (
     <Button
-      className="rounded-full bg-white p-2"
-      variant="default"
+      className="rounded-full border-0 bg-transparent p-2 hover:bg-transparent"
+      variant="outline"
       onClick={handleDownload}
       disabled={isLoading}
       aria-label="Download Wallpaper">
-      <DownloadIcon className="h-4 w-4 text-black" />
+      <DownloadIcon className="h-4 w-4 text-white" />
     </Button>
   );
 };

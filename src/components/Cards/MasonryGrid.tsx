@@ -10,6 +10,7 @@ type Wallpaper = Prisma.WallpaperGetPayload<{
     category: true;
     likes: { select: { id: true } };
     _count: { select: { likes: true } };
+    user: { select: { name: true } };
   };
 }>;
 

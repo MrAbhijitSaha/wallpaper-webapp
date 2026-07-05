@@ -20,6 +20,11 @@ type WallpaperCardProps = {
           likes: true;
         };
       };
+      user: {
+        select: {
+          name: true;
+        };
+      };
     };
   }>;
 };
@@ -42,9 +47,9 @@ const WallpaperCard = ({ wallpaperinfo }: WallpaperCardProps) => {
           <div className="absolute inset-0 flex items-end bg-linear-to-t from-black/85 via-black/10 to-transparent">
             <div className="flex w-full items-end justify-between gap-3 p-4">
               <div className="min-w-0">
-                <h3 className="truncate font-medium text-white">
-                  {wallpaperinfo.title}
-                </h3>
+                <p className="truncate font-medium text-white">
+                  {wallpaperinfo.user.name}
+                </p>
 
                 <p className="text-xs tracking-wider text-zinc-300 uppercase">
                   {wallpaperinfo.category?.categoryName}

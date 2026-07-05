@@ -13,6 +13,11 @@ const page = async () => {
   const wallpaper = await prisma.wallpaper.findMany({
     include: {
       category: true,
+      user: {
+        select: {
+          name: true,
+        },
+      },
       _count: {
         select: {
           likes: true,

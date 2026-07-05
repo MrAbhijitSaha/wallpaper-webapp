@@ -189,12 +189,12 @@ const UploadWallpaperForm = ({ categoryData }: UploadWallpaperFormProps) => {
               value={field.value}
               onValueChange={field.onChange}
               aria-invalid={fieldState.invalid}>
-              <SelectTrigger className="border-border focus:border-primary focus:ring-primary/20 w-full bg-transparent transition-all duration-200 focus:ring-1">
+              <SelectTrigger className="border-border focus:border-primary focus:ring-primary/20 w-full bg-transparent capitalize transition-all duration-200 focus:ring-1">
                 <span
                   data-slot="select-value"
-                  className={
+                  className={`${
                     field.value ? "text-foreground" : "text-muted-foreground/50"
-                  }>
+                  }`}>
                   {categoryData.find((cat) => cat.id === field.value)
                     ?.categoryName ?? "Select a category"}
                 </span>
@@ -211,7 +211,7 @@ const UploadWallpaperForm = ({ categoryData }: UploadWallpaperFormProps) => {
                     <SelectItem
                       key={category.id}
                       value={category.id}
-                      className="focus:bg-accent/50 transition-colors duration-100">
+                      className="focus:bg-accent/50 capitalize transition-colors duration-100">
                       {category.categoryName}
                     </SelectItem>
                   ))

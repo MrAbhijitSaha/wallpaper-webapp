@@ -26,6 +26,11 @@ const page = async ({
     },
     include: {
       category: true,
+      user: {
+        select: {
+          name: true,
+        },
+      },
       _count: {
         select: {
           likes: true,

@@ -56,16 +56,19 @@ const WallpaperCard = ({ wallpaperinfo }: WallpaperCardProps) => {
                 </p>
               </div>
 
-              <div className="flex shrink-0 gap-2 opacity-90 transition-opacity duration-200 group-hover:opacity-100">
+              <div className="flex shrink-0 items-center gap-2 rounded-full border border-zinc-500/50 opacity-90 transition-opacity duration-200 group-hover:opacity-100">
                 <LikeButton
                   initialLikesCount={wallpaperinfo._count.likes}
                   initialLiked={wallpaperinfo.likes.length > 0}
                   wallpaperId={wallpaperinfo.id}
+                  className="bg-transparent text-white hover:bg-transparent active:bg-transparent"
                 />
 
                 <DownloadButton
                   wallpaperId={wallpaperinfo.id}
                   imagePath={wallpaperinfo.image}
+                  className="text-white"
+                  downloadCount={wallpaperinfo.downloadCount}
                 />
               </div>
             </div>

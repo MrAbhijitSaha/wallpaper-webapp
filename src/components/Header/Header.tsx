@@ -19,6 +19,7 @@ import { authClient } from "@/lib/auth-client";
 import { ChevronDownIcon, LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ProtectedActionButton from "../Buttons/ProtectedActionButton";
+import { Button } from "../shadcnui/button";
 
 const Header = () => {
   const { replace } = useRouter();
@@ -56,28 +57,28 @@ const Header = () => {
 
           <ProtectedActionButton
             route="create"
-            className="text-foreground/70 hover:text-foreground text-sm duration-300">
+            className="text-foreground/70 hover:text-foreground m-0 p-0 text-sm duration-300">
             Create
           </ProtectedActionButton>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger className="ring-border hover:ring-foreground/30 flex cursor-pointer items-center gap-1 rounded-full p-0.5 pr-2 ring-1 transition-all">
-              <Avatar size="sm">
-                <AvatarImage
-                  src={data?.user?.image || ""}
-                  alt={data?.user?.name || "User"}
-                />
-                <AvatarFallback>
-                  {data?.user?.name?.charAt(0)?.toUpperCase() || "U"}
-                </AvatarFallback>
-              </Avatar>
-              <ChevronDownIcon className="text-muted-foreground h-4 w-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="center"
-              className={"w-50"}>
-              {data ?
-                <>
+          {data ?
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="ring-border hover:ring-foreground/30 flex cursor-pointer items-center gap-1 rounded-full p-0.5 pr-2 ring-1 transition-all">
+                  <Avatar size="sm">
+                    <AvatarImage
+                      src={data?.user?.image || ""}
+                      alt={data?.user?.name || "User"}
+                    />
+                    <AvatarFallback>
+                      {data?.user?.name?.charAt(0)?.toUpperCase() || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <ChevronDownIcon className="text-muted-foreground h-4 w-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="center"
+                  className={"w-50"}>
                   <DropdownMenuGroup>
                     <DropdownMenuLabel>
                       Hello {data.user.name.split(" ")[0].toUpperCase()}
@@ -99,21 +100,23 @@ const Header = () => {
                       Log out
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
-                </>
-              : <>
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel>Login to your account</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => replace("/auth/signin")}>
-                      Sign In
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => replace("/auth/signup")}>
-                      Sign Up
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </>
-              }
-            </DropdownMenuContent>
-          </DropdownMenu>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          : <>
+              <Link href={"/auth/signin"}>
+                <Button className={""}>Signin</Button>
+              </Link>
+
+              <Link href={"/auth/signup"}>
+                <Button
+                  className={""}
+                  variant={"secondary"}>
+                  Signup
+                </Button>
+              </Link>
+            </>
+          }
 
           <ThemeToggleButton />
         </nav>

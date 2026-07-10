@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import trackWallpaperDownload from "@/server/trackWallpaperDownload";
 import { DownloadIcon } from "lucide-react";
 import { MouseEvent, useState } from "react";
@@ -9,9 +10,18 @@ import { Button } from "../shadcnui/button";
 type DownloadButtonProps = {
   wallpaperId: string;
   imagePath: string;
+  className?: string;
+  text?: string;
+  downloadCount: number;
 };
 
-const DownloadButton = ({ wallpaperId, imagePath }: DownloadButtonProps) => {
+const DownloadButton = ({
+  wallpaperId,
+  imagePath,
+  className,
+  text,
+  downloadCount,
+}: DownloadButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDownload = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -48,12 +58,16 @@ const DownloadButton = ({ wallpaperId, imagePath }: DownloadButtonProps) => {
 
   return (
     <Button
-      className="rounded-full border-0 bg-transparent p-2 hover:bg-transparent"
-      variant="outline"
+      className={cn(
+        "gap-2 rounded-full border-0 bg-transparent p-2 text-sm hover:bg-transparent",
+        className,
+      )}
+      variant="default"
       onClick={handleDownload}
       disabled={isLoading}
       aria-label="Download Wallpaper">
-      <DownloadIcon className="h-4 w-4 text-white" />
+      <DownloadIcon className="h-4 w-4" />
+      {downloadCount} {text}
     </Button>
   );
 };

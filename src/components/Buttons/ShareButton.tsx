@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { CheckIcon, Share2Icon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../shadcnui/button";
@@ -41,13 +42,20 @@ const ShareButton = ({ wallpaperId, title, className }: ShareButtonProps) => {
     <Button
       type="button"
       variant="secondary"
-      size="icon"
+      size="default"
       onClick={handleShare}
       aria-label="Share wallpaper"
-      className={className}>
+      className={cn(`text-sm ${className}`)}>
       {copied ?
-        <CheckIcon className="h-4 w-4" />
-      : <Share2Icon className="h-4 w-4" />}
+        <>
+          <CheckIcon className="h-4 w-4" />
+          share
+        </>
+      : <>
+          <Share2Icon className="h-4 w-4" />
+          share
+        </>
+      }
     </Button>
   );
 };

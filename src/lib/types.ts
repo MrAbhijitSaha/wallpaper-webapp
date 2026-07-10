@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import z from "zod";
+import { Prisma } from "../../generated/prisma/browser";
 import {
   createCategoryFormSchema,
   signInFormSchema,
@@ -26,4 +27,31 @@ export type ProtectedActionButtonProps = {
 
 export type SignInFormProps = {
   onSuccess?: () => void;
+};
+
+export type WallpaperWithDetails = Prisma.WallpaperGetPayload<{
+  include: {
+    category: true;
+    user: true;
+    likes: {
+      select: {
+        id: true;
+      };
+    };
+    _count: {
+      select: {
+        likes: true;
+      };
+    };
+  };
+}>;
+
+export type Swatch = {
+  id: string;
+  kind: "phone" | "desktop";
+  position: string;
+  gradient: string;
+  delay: string;
+  duration: string;
+  faded?: boolean;
 };

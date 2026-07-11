@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/database/dbClient";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 const toggleLike = async (wallpaperId: string) => {
@@ -58,6 +59,11 @@ const toggleLike = async (wallpaperId: string) => {
         wallpaperId,
       },
     });
+
+    revalidatePath("/");
+    revalidatePath("/wallpapers");
+    revalidatePath("/wallpapers/[wallpaperId]", "page");
+    revalidatePath("/liked");
 
     return {
       success: true,

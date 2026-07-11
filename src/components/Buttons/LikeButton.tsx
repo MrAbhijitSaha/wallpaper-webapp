@@ -1,11 +1,11 @@
 "use client";
 
-import { signinDialogAtom } from "@/lib/globalState";
+import { likeStateMapAtom, signinDialogAtom } from "@/lib/globalState";
 import { cn } from "@/lib/utils";
 import toggleLike from "@/server/toggleLike";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { HeartIcon } from "lucide-react";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { Button } from "../shadcnui/button";
 
 type LikeButtonProps = {
@@ -24,14 +24,52 @@ export const LikeButton = ({
   text,
 }: LikeButtonProps) => {
   const openSignin = useSetAtom(signinDialogAtom);
+  const [likeStateMap, setLikeStateMap] = useAtom(likeStateMapAtom);
 
-  const [liked, setLiked] = useState(initialLiked);
-  const [likesCount, setLikesCount] = useState(initialLikesCount);
+  const currentLikeState = likeStateMap[wallpaperId] ?? {
+    liked: initialLiked,
+    count: initialLikesCount,
+  };
+
   const [isPending, setIsPending] = useState(false);
+
+  useEffect(() => {
+    setLikeStateMap((prev) => {
+      const existingState = prev[wallpaperId];
+
+      if (
+        existingState?.liked === initialLiked &&
+        existingState?.count === initialLikesCount
+      ) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        [wallpaperId]: {
+          liked: initialLiked,
+          count: initialLikesCount,
+        },
+      };
+    });
+  }, [initialLiked, initialLikesCount, setLikeStateMap, wallpaperId]);
 
   const handleToggle = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
+
+    const optimisticState = {
+      liked: !currentLikeState.liked,
+      count:
+        currentLikeState.liked ?
+          Math.max(0, currentLikeState.count - 1)
+        : currentLikeState.count + 1,
+    };
+
+    setLikeStateMap((prev) => ({
+      ...prev,
+      [wallpaperId]: optimisticState,
+    }));
 
     setIsPending(true);
 
@@ -40,12 +78,26 @@ export const LikeButton = ({
 
       if (!result.userAuthentication) {
         openSignin(true);
+        setLikeStateMap((prev) => ({
+          ...prev,
+          [wallpaperId]: currentLikeState,
+        }));
         return;
       }
 
       if (result.success) {
-        setLiked(result.liked ?? false);
-        setLikesCount(result.likesCount ?? 0);
+        setLikeStateMap((prev) => ({
+          ...prev,
+          [wallpaperId]: {
+            liked: result.liked ?? false,
+            count: result.likesCount ?? optimisticState.count,
+          },
+        }));
+      } else {
+        setLikeStateMap((prev) => ({
+          ...prev,
+          [wallpaperId]: currentLikeState,
+        }));
       }
     } finally {
       setIsPending(false);
@@ -60,9 +112,9 @@ export const LikeButton = ({
       disabled={isPending}
       className={cn("gap-2 text-sm", className)}>
       <HeartIcon
-        className={`h-4 w-4 ${liked ? "fill-current text-red-500" : ""}`}
+        className={`h-4 w-4 ${currentLikeState.liked ? "fill-current text-red-500" : ""}`}
       />
-      <span>{likesCount}</span>
+      <span>{currentLikeState.count}</span>
       {text}
     </Button>
   );

@@ -23,7 +23,7 @@ import { Button } from "../shadcnui/button";
 
 const Header = () => {
   const { replace } = useRouter();
-  const { data, isPending } = authClient.useSession();
+  const { data } = authClient.useSession();
 
   return (
     <header

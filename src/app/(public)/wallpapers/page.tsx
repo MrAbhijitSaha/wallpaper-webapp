@@ -1,9 +1,17 @@
 import MasonryGrid from "@/components/Cards/MasonryGrid";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/database/dbClient";
+import { buildMetadata } from "@/lib/seo";
 import getCategory from "@/server/getCategory";
 import { headers } from "next/headers";
 import Link from "next/link";
+
+export const metadata = buildMetadata({
+  title: "Browse wallpapers",
+  description:
+    "Browse a curated gallery of high-resolution wallpapers by mood, color, and style.",
+  path: "/wallpapers",
+});
 
 const page = async () => {
   const session = await auth.api.getSession({

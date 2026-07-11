@@ -3,7 +3,8 @@ import z from "zod";
 const clientEnvSchema = z.object({
   NEXT_PUBLIC_BETTER_AUTH_URL: z
     .string()
-    .min(1, { error: "NEXT_PUBLIC_BETTER_AUTH_URL is required" }),
+    .min(1)
+    .default("http://localhost:3000"),
 });
 
 const clientEnvVars = {

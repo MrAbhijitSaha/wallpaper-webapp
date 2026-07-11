@@ -1,8 +1,27 @@
 import MasonryGrid from "@/components/Cards/MasonryGrid";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/database/dbClient";
+import { buildMetadata } from "@/lib/seo";
 import { headers } from "next/headers";
 import Link from "next/link";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ categoryWallpaper: string }>;
+}) {
+  const { categoryWallpaper } = await params;
+  const categoryName = decodeURIComponent(categoryWallpaper)
+    .split("-")
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(" ");
+
+  return buildMetadata({
+    title: `${categoryName} wallpapers`,
+    description: `Explore ${categoryName.toLowerCase()} wallpapers in the AuraWall collection.`,
+    path: `/wallpapers/category/${categoryWallpaper}`,
+  });
+}
 
 const page = async ({
   params,

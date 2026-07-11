@@ -94,7 +94,26 @@ const WallpaperGrid = () => {
       {WALLPAPERS.map((wall) => (
         <WallpaperCard
           key={wall.id}
-          info={wall}
+          wallpaperinfo={{
+            id: String(wall.id),
+            title: wall.title,
+            image: wall.img,
+            width: wall.width,
+            height: wall.height,
+            downloadCount: 0,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            userId: "demo",
+            categoryId: null,
+            fileSize: null,
+            format: null,
+            viewCount: 0,
+            likeCount: 0,
+            user: { name: "Demo" },
+            category: { id: "demo", categoryName: wall.category },
+            likes: [],
+            _count: { likes: 0 },
+          }}
         />
       ))}
     </Masonry>

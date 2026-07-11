@@ -1,16 +1,17 @@
 import { Button } from "@/components/shadcnui/button";
 import { auth } from "@/lib/auth";
 import { swatches } from "@/lib/homeSwatches";
+import { buildMetadata } from "@/lib/seo";
 import { ArrowUpRightIcon } from "lucide-react";
-import { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Aurawall — Wallpapers curated for every screen",
+export const metadata = buildMetadata({
+  title: "Curated wallpapers for every screen",
   description:
-    "A growing library of high-quality wallpapers. Browse by mood, save your favourites, and share the ones you make.",
-};
+    "Discover a growing library of high-quality wallpapers. Browse by mood, save your favourites, and share the ones you make.",
+  path: "/",
+});
 
 // Each string below is a COMPLETE Tailwind class, written out in full.
 // Tailwind's compiler only generates CSS for classes it can find as literal

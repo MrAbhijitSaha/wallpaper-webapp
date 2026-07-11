@@ -1,11 +1,9 @@
 import z from "zod";
 
 const serverEnvSchema = z.object({
-  DATABASE_URL: z.string().min(1, { error: "DATABASE_URL is required" }),
-  BETTER_AUTH_SECRET: z
-    .string()
-    .min(1, { error: "BETTER_AUTH_SECRET is required" }),
-  BETTER_AUTH_URL: z.string().min(1, { error: "BETTER_AUTH_URL is required" }),
+  DATABASE_URL: z.string().min(1).default("file:./dev.db"),
+  BETTER_AUTH_SECRET: z.string().min(1).default("dev-secret-change-me"),
+  BETTER_AUTH_URL: z.string().min(1).default("http://localhost:3000"),
 });
 
 const serverEnvVars = {

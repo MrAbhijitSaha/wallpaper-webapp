@@ -32,11 +32,14 @@ const UploadWallpaperForm = ({ categoryData }: UploadWallpaperFormProps) => {
   const [isFile, setIsFile] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
+  const maximumFileSize = 50 * 1024 * 1024;
+
   const {
     control,
     handleSubmit,
     reset,
-    formState: { isSubmitting, isSubmitSuccessful },
+
+    formState: { isSubmitting, isSubmitSuccessful, errors },
   } = useForm({
     resolver: zodResolver(wallpaperUploadFormSchema),
     defaultValues: {
@@ -50,19 +53,34 @@ const UploadWallpaperForm = ({ categoryData }: UploadWallpaperFormProps) => {
     readAs: "DataURL",
     accept: "image/*",
     multiple: false,
-    maxFileSize: 50,
+    maxFileSize: maximumFileSize /* 50 MB */,
     onFilesSuccessfullySelected: () => setIsFile(true),
     onClear: () => setIsFile(false),
+    onFilesRejected: ({ errors }) => {
+      console.log("Rejected:", errors);
+
+      if (errors.some((error) => error.name === "FileSizeError")) {
+        toast.error("Image size must be less than 50 MB.");
+      }
+    },
   });
+
+  const file = plainFiles[0];
 
   const handleUploadWallpaperForm = async (
     value: WallpaperUploadFormSchemaType,
   ) => {
-    if (!isFile) {
-      return toast.error("Please select your image");
+    if (!file) {
+      toast.error("Please select your image ");
+      return;
     }
 
-    await uploadWallpaperAction(value, plainFiles[0]);
+    if (file.size > maximumFileSize) {
+      toast.error("Image size must be less than 50 MB.");
+      return;
+    }
+
+    await uploadWallpaperAction(value, file);
 
     reset();
     router.push("/wallpapers");
@@ -93,8 +111,6 @@ const UploadWallpaperForm = ({ categoryData }: UploadWallpaperFormProps) => {
             onDrop={(e) => {
               e.preventDefault();
               setIsDragging(false);
-              // drag-and-drop is handled by useFilePicker internally;
-              // this just resets the drag state visually
             }}
             role="button"
             tabIndex={0}
@@ -219,7 +235,9 @@ const UploadWallpaperForm = ({ categoryData }: UploadWallpaperFormProps) => {
               </SelectContent>
             </Select>
 
-            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            {(fieldState.invalid || !file) && (
+              <FieldError errors={[fieldState.error]} />
+            )}
           </Field>
         )}
       />

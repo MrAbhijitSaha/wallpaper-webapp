@@ -10,3 +10,126 @@ generator client {
 datasource db {
   provider = "sqlite"
 }
+
+model User {
+  id            String      @id @default(uuid())
+  name          String
+  email         String
+  emailVerified Boolean     @default(false)
+  image         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  wallpapers    Wallpaper[]
+  likes         Like[]
+  downloads     Download[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(uuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Wallpaper {
+  id            String   @id @default(uuid())
+  image         String
+  title         String
+  width         Int?
+  height        Int?
+  fileSize      Int?
+  format        String?
+  downloadCount Int      @default(0)
+  viewCount     Int      @default(0)
+  likeCount     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  userId     String
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId String?
+  category   Category?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  likes      Like[]
+  downloads  Download[]
+
+  @@map("wallpaper")
+}
+
+model Category {
+  id           String      @id @default(uuid())
+  categoryName String
+  wallpapers   Wallpaper[]
+
+  @@map("category")
+}
+
+model Like {
+  id      String   @id @default(uuid())
+  likedAt DateTime @default(now())
+
+  wallpaperId String
+  wallpaper   Wallpaper @relation(fields: [wallpaperId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, wallpaperId])
+  @@map("like")
+}
+
+model Download {
+  id          String @id @default(uuid())
+  wallpaperId String
+  userId      String
+
+  wallpaper Wallpaper @relation(fields: [wallpaperId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("download")
+}

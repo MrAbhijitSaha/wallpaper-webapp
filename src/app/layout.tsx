@@ -1,28 +1,41 @@
 import Header from "@/components/Header/Header";
 import ThemeProvider from "@/components/Providers/ThemeProvider";
+import { Toaster } from "@/components/shadcnui/sonner";
 import { geistSans } from "@/lib/fonts";
+import { buildMetadata } from "@/lib/seo";
+
+import SigninFormDialog from "@/components/Dialog/LoginFormDialog";
+import { LayoutChildrenProps } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { ReactNode } from "react";
+import type { Metadata } from "next";
 import "./globals.css";
 
-type RootLayoutProps = Readonly<{
-  children: ReactNode;
-}>;
+export const metadata: Metadata = buildMetadata({
+  title: "Wallpapers curated for every screen",
+  description:
+    "Discover a modern wallpaper collection with curated themes, quick browsing, and seamless sharing.",
+  path: "/",
+});
 
-const RootLayout = ({ children }: RootLayoutProps) => {
+const RootLayout = ({ children }: LayoutChildrenProps) => {
   return (
     <html
       lang="en"
       className={cn("font-sans", geistSans.variable)}
       suppressHydrationWarning>
-      <body>
+      <body className="bg-background text-foreground min-h-screen">
         <ThemeProvider
           attribute={"class"}
-          defaultTheme="dark"
-          enableSystem={false}>
+          defaultTheme="system"
+          disableTransitionOnChange
+          enableSystem>
+          <div className="fixed inset-0 -z-10 [background:radial-gradient(125%_125%_at_50%_90%,#fff_40%,#6366f1_100%)] dark:[background:radial-gradient(125%_125%_at_50%_90%,#000000_40%,#0d1a36_100%)]" />
           <Header />
+          <SigninFormDialog />
 
-          <main className="mx-auto max-w-7xl">{children}</main>
+          <main>{children}</main>
+
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

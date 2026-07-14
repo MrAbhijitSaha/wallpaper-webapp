@@ -51,7 +51,7 @@ CREATE TABLE "verification" (
 );
 
 -- CreateTable
-CREATE TABLE "Wallpaper" (
+CREATE TABLE "wallpaper" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "image" TEXT NOT NULL,
     "title" TEXT NOT NULL,
@@ -59,53 +59,40 @@ CREATE TABLE "Wallpaper" (
     "height" INTEGER,
     "fileSize" INTEGER,
     "format" TEXT,
-    "isPublic" BOOLEAN NOT NULL DEFAULT true,
     "downloadCount" INTEGER NOT NULL DEFAULT 0,
     "viewCount" INTEGER NOT NULL DEFAULT 0,
+    "likeCount" INTEGER NOT NULL DEFAULT 0,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     "userId" TEXT NOT NULL,
     "categoryId" TEXT,
-    CONSTRAINT "Wallpaper_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "Wallpaper_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    CONSTRAINT "wallpaper_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "wallpaper_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "category" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable
-CREATE TABLE "Category" (
-    "id" TEXT NOT NULL PRIMARY KEY
-);
-
--- CreateTable
-CREATE TABLE "Tag" (
-    "id" TEXT NOT NULL PRIMARY KEY
-);
-
--- CreateTable
-CREATE TABLE "WallpaperTag" (
+CREATE TABLE "category" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "wallpaperId" TEXT,
-    CONSTRAINT "WallpaperTag_wallpaperId_fkey" FOREIGN KEY ("wallpaperId") REFERENCES "Wallpaper" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    "categoryName" TEXT NOT NULL
 );
 
 -- CreateTable
-CREATE TABLE "Like" (
+CREATE TABLE "like" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "wallpaperId" TEXT,
-    CONSTRAINT "Like_wallpaperId_fkey" FOREIGN KEY ("wallpaperId") REFERENCES "Wallpaper" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    "likedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "wallpaperId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    CONSTRAINT "like_wallpaperId_fkey" FOREIGN KEY ("wallpaperId") REFERENCES "wallpaper" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "like_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
-CREATE TABLE "Download" (
+CREATE TABLE "download" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "wallpaperId" TEXT,
-    CONSTRAINT "Download_wallpaperId_fkey" FOREIGN KEY ("wallpaperId") REFERENCES "Wallpaper" ("id") ON DELETE SET NULL ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "CollectionItem" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "wallpaperId" TEXT,
-    CONSTRAINT "CollectionItem_wallpaperId_fkey" FOREIGN KEY ("wallpaperId") REFERENCES "Wallpaper" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    "wallpaperId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    CONSTRAINT "download_wallpaperId_fkey" FOREIGN KEY ("wallpaperId") REFERENCES "wallpaper" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "download_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateIndex
@@ -122,3 +109,6 @@ CREATE INDEX "account_userId_idx" ON "account"("userId");
 
 -- CreateIndex
 CREATE INDEX "verification_identifier_idx" ON "verification"("identifier");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "like_userId_wallpaperId_key" ON "like"("userId", "wallpaperId");
